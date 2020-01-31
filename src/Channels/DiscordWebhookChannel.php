@@ -42,9 +42,7 @@ class DiscordWebhookChannel
             return;
         }
 
-        $url = $url . '/slack';
-
-        return $this->http->post($url, $this->buildJsonPayload(
+        return $this->http->post($url . '/slack', $this->buildJsonPayload(
             $notification->toSlack($notifiable)
         ));
     }

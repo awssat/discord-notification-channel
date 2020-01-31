@@ -38,11 +38,10 @@ class DiscordWebhookChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (! $url = $notifiable->routeNotificationFor('discrod', $notification)) {
+        if (! $url = $notifiable->routeNotificationFor('discord', $notification)) {
             return;
         }
 
-        dd('here');
         return $this->http->post($url . '/slack', $this->buildJsonPayload(
             $notification->toSlack($notifiable)
         ));

@@ -45,15 +45,13 @@ class DiscordWebhookChannel
             return;
         }
 
-        if(method_exists($notification, 'toDiscord')) {
-            return $this->http->post($url, $this->buildDiscordJsonPayload(
-                $notification->toDiscord($notifiable)
-            ));
+        $message = $notification->toDiscord($notifiable);
+
+        if($message instanceof SlackMessage) {
+            return $this->http->post($url . '/slack', $this->buildSlackJsonPayload($message));
         }
 
-        return $this->http->post($url . '/slack', $this->buildSlackJsonPayload(
-            $notification->toSlack($notifiable)
-        ));
+        return $this->http->post($url, $this->buildDiscordJsonPayload($message));
     }
 
     /**

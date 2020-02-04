@@ -1,7 +1,7 @@
 {
   "name": "awssat/discord-notification-channel",
   "description": "Discrod Notification Channel for laravel.",
-  "keywords": ["laravel", "notifications", "discrod"],
+  "keywords": ["laravel", "notifications", "discord"],
   "license": "MIT",
   "authors": [
     {
@@ -22,6 +22,11 @@
   "autoload": {
     "psr-4": {
       "Awssat\\Notifications\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Awssat\\Tests\\Notifications\\": "tests/"
     }
   },
   "config": {

@@ -69,10 +69,12 @@ class DiscordWebhookChannel
             'timestamp' => data_get($message, 'timestamp'),
         ]);
 
-        return array_merge(array_merge([
-            'content' => $message->content,
-            'embeds' => $this->embeds($message),
-        ], $optionalFields), $message->http);
+        return array_merge([
+            'json' => array_merge([
+                'content' => $message->content,
+                'embeds' => $this->embeds($message),
+            ], $optionalFields),
+        ], $message->http);
     }
 
 

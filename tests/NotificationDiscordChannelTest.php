@@ -44,9 +44,10 @@ class NotificationDiscordChannelTest extends TestCase
      * @param \Illuminate\Notifications\Notification $notification
      * @param array $payload
      */
-    public function testCorrectPayloadIsSentToDiscord(Notification $notification, array $payload)
+    public function testCorrectPayloadIsSentToDiscord(Notification $notification, string $url, array $payload)
     {
-        $this->guzzleHttp->shouldReceive('post')->andReturnUsing(function ($argUrl, $argPayload) use ($payload) {
+        $this->guzzleHttp->shouldReceive('post')->andReturnUsing(function ($argUrl, $argPayload) use ($payload, $url) {
+            $this->assertEquals($argUrl, $url);
             $this->assertEquals($argPayload, $payload);
         });
 
@@ -56,8 +57,8 @@ class NotificationDiscordChannelTest extends TestCase
     public function payloadDataProvider()
     {
         return [
-            'payloadWithSlackMessage' => $this->getPayloadWithSlackMessage(),
             'payloadWithDiscord' => $this->getPayloadWithDiscord(),
+            'payloadWithSlackMessage' => $this->getPayloadWithSlackMessage(),
         ];
     }
 
@@ -65,6 +66,7 @@ class NotificationDiscordChannelTest extends TestCase
     {
         return [
             new NotificationDiscordChannelTestNotificationWithSlack,
+            'url/slack',
             [
                 'json' => [
                     'username' => 'Ghostbot',
@@ -102,13 +104,33 @@ class NotificationDiscordChannelTest extends TestCase
     {
         return [
             new NotificationDiscordChannelTestNotificationWithDiscordMessage,
+            'url',
             [
+                'json' => [
                     'username' => 'Ghostbot',
-                    'tts' => 'false',
                     'content' => 'Content',
-                    'embeds' => [
-                    ],
+                    'embeds' =>
+                        [
+                            [
+                                'title' => 'Discord is cool',
+                                'description' => 'Slack nah',
+                                'fields' =>
+                                    [
+                                        [
+                                            'name' => 'Laravel',
+                                            'value' => '7.0.0',
+                                            'inline' => true,
+                                        ],
+                                        [
+                                            'name' => 'PHP',
+                                            'value' => '8.0.0',
+                                            'inline' => true,
+                                        ],
+                                    ],
+                            ],
+                        ],
                 ],
+            ],
         ];
     }
 
@@ -156,7 +178,13 @@ class NotificationDiscordChannelTestNotificationWithDiscordMessage extends Notif
     {
         return (new DiscordMessage)
             ->from('Ghostbot')
-            ->content('Content');
+            ->content('Content')
+        ->embed(function ($embed) {
+        $embed->title('Discord is cool')->description('Slack nah')
+            ->field('Laravel', '7.0.0', true)
+            ->field('PHP', '8.0.0', true);
+    });
+
 
     }
 }

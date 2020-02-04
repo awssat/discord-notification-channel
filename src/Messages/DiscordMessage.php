@@ -32,7 +32,7 @@ class DiscordMessage
      *
      * @var string|null
      */
-    public $tts = 'false';
+    public $tts;
 
     /**
      * The contents of the file being sent.

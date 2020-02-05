@@ -108,7 +108,7 @@ class DiscordEmbed
      */
     public function color($code)
     {
-        $this->color = $code;
+        $this->color = hexdec($code);
 
         return $this;
     }

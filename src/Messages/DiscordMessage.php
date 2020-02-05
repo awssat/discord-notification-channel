@@ -34,12 +34,6 @@ class DiscordMessage
      */
     public $tts;
 
-    /**
-     * The contents of the file being sent.
-     *
-     * @var array
-     */
-    public $file;
 
     /**
      * Embedded rich content.
@@ -48,6 +42,11 @@ class DiscordMessage
      */
     public $embeds;
 
+    /**
+     * Http options
+     *
+     * @var array
+     */
     public $http = [];
 
 
@@ -98,24 +97,6 @@ class DiscordMessage
         return $this;
     }
 
-    /**
-     * Set the contents and filename of the file being sent.
-     *
-     * @param string $contents
-     * @param string $filename
-     *
-     * @return $this
-     */
-    public function file($contents, $filename)
-    {
-        $this->file = [
-            'name' => 'file',
-            'contents' => $contents,
-            'filename' => $filename,
-        ];
-
-        return $this;
-    }
 
     /**
      * Define an embedded rich content for the message.

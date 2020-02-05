@@ -1,6 +1,6 @@
 {
   "name": "awssat/discord-notification-channel",
-  "description": "Discrod Notification Channel for laravel.",
+  "description": "Discord Notification Channel for laravel.",
   "keywords": ["laravel", "notifications", "discord"],
   "license": "MIT",
   "authors": [

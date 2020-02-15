@@ -179,12 +179,10 @@ class NotificationDiscordChannelTestNotificationWithDiscordMessage extends Notif
         return (new DiscordMessage)
             ->from('Ghostbot')
             ->content('Content')
-        ->embed(function ($embed) {
-        $embed->title('Discord is cool')->description('Slack nah')
-            ->field('Laravel', '7.0.0', true)
-            ->field('PHP', '8.0.0', true);
-    });
-
-
+            ->embed(function ($embed) {
+                $embed->title('Discord is cool')->description('Slack nah')
+                    ->field('Laravel', '7.0.0', true)
+                    ->field('PHP', '8.0.0', true);
+            });
     }
 }

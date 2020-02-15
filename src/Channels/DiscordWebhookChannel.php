@@ -6,8 +6,6 @@ use Awssat\Notifications\Messages\DiscordEmbed;
 use Awssat\Notifications\Messages\DiscordEmbedField;
 use Awssat\Notifications\Messages\DiscordMessage;
 use GuzzleHttp\Client as HttpClient;
-use Illuminate\Notifications\Messages\SlackAttachment;
-use Illuminate\Notifications\Messages\SlackAttachmentField;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 

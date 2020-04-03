@@ -71,6 +71,35 @@ or if you want you can make it run from `toSlack` method
 
 https://laravel.com/docs/6.x/notifications#slack-notifications for further laravel slack messages examples
 
+### Routing Discord Notifications
 
-### Available methods
+To route Discord notifications to the proper location, define a `routeNotificationForDiscord` method on your notifiable entity. This should return the webhook URL to which the notification should be delivered. read Webhook Discord docs here https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks
+
+
+```php
+<?php
+
+namespace App;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    use Notifiable;
+
+    /**
+     * Route notifications for the Slack channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string
+     */
+    public function routeNotificationForDiscord($notification)
+    {
+        return 'https://discordapp.com/api/webhooks/.......';
+    }
+}
+
+```
+
 

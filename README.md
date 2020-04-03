@@ -89,7 +89,7 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
-     * Route notifications for the Slack channel.
+     * Route notifications for the Discord channel.
      *
      * @param  \Illuminate\Notifications\Notification  $notification
      * @return string

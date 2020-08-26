@@ -91,7 +91,7 @@ class DiscordWebhookChannel
                 'color' => $embed->color,
                 'title' => $embed->title,
                 'description' => $embed->description,
-                'link' => $embed->url,
+                'url' => $embed->url,
                 'thumbnail' => $embed->thumbnail,
                 'image' => $embed->image,
                 'footer' => $embed->footer,

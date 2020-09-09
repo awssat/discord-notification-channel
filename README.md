@@ -1,4 +1,4 @@
-# Laravel Discord Notification Channel 
+# Laravel Discord Notification Channel
 
 ### Introduction
 
@@ -7,14 +7,14 @@ Send Discord messages through webhook with Discord or Slack payload via Laravel 
 ## Features
 - Support slack payload by using `new  (new SlackMessage)` or `$this->toSlack($notifiable)`
 - Support discord webhook payload
-- Easy to use 
+- Easy to use
 
 ## Install
 
 Via Composer
 ``` bash
 composer require awssat/discord-notification-channel
-``` 
+```
 
 ## Usage
 in your notification you should define the `discord` channel in the via method
@@ -36,7 +36,7 @@ you should have a `toDiscord` method
             ->content('Content')
             ->embed(function ($embed) {
                 $embed->title('Discord is cool')->description('Slack nah')
-                    ->field('Laravel', '7.0.0', true)
+                    ->field('Laravel', '8.0.0', true)
                     ->field('PHP', '8.0.0', true);
             });
     }
@@ -101,5 +101,3 @@ class User extends Authenticatable
 }
 
 ```
-
-

@@ -3,55 +3,76 @@
 namespace Awssat\Tests\Notifications;
 
 use Awssat\Notifications\Channels\DiscordWebhookChannel;
-use Awssat\Notifications\Messages\DiscordEmbed;
 use Awssat\Notifications\Messages\DiscordMessage;
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
-use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
 class NotificationDiscordChannelTest extends TestCase
 {
-    /**
-     * @var DiscordWebhookChannel
-     */
-    private $discordChannel;
+    private const DISCORD_SUCCESS_HTTP_CODE = 204;
 
     /**
-     * @var \Mockery\MockInterface|\GuzzleHttp\Client
+     * @var Client
      */
-    private $guzzleHttp;
+    private $client;
+
+    /**
+     * @var array
+     */
+    private $container = [];
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->guzzleHttp = m::mock(Client::class);
+        Carbon::setTestNow(Carbon::now());
 
-        $this->discordChannel = new DiscordWebhookChannel($this->guzzleHttp);
+        $this->client = $this->setupGuzzleMock();
     }
 
-    protected function tearDown(): void
+    private function setupGuzzleMock()
     {
-        m::close();
+        $history = Middleware::history($this->container);
+
+        $mock = new MockHandler([
+            new Response(self::DISCORD_SUCCESS_HTTP_CODE, [], ''),
+        ]);
+
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        return new Client(['handler' => $handlerStack]);
     }
 
     /**
      * @dataProvider payloadDataProvider
      * @param \Illuminate\Notifications\Notification $notification
+     * @param string $url
      * @param array $payload
      */
     public function testCorrectPayloadIsSentToDiscord(Notification $notification, string $url, array $payload)
     {
-        $this->guzzleHttp->shouldReceive('post')->andReturnUsing(function ($argUrl, $argPayload) use ($payload, $url) {
-            $this->assertEquals($argUrl, $url);
-            $this->assertEquals($argPayload, $payload);
-        });
+        $discordChannel = new DiscordWebhookChannel($this->client);
 
-        $this->discordChannel->send(new NotificationDiscordChannelTestNotifiable, $notification);
+        $discordChannel->send(new NotificationDiscordChannelTestNotifiable, $notification);
+
+        self::assertCount(1, $this->container);
+
+        /** @var Request $request */
+        $request = $this->container[0]['request'];
+        $requestBody = json_decode($request->getBody()->getContents(), true);
+
+        self::assertEquals(ltrim($request->getRequestTarget(), '/'), $url);
+        self::assertEquals($requestBody, $payload['json']);
     }
 
     public function payloadDataProvider()
@@ -92,7 +113,7 @@ class NotificationDiscordChannelTest extends TestCase
                             'author_name' => 'Author',
                             'author_link' => 'https://laravel.com/fake_author',
                             'author_icon' => 'https://laravel.com/fake_author.png',
-                            'ts' => 1234567890,
+                            'ts' => Carbon::now()->timestamp,
                         ],
                     ],
                 ],
@@ -155,8 +176,6 @@ class NotificationDiscordChannelTestNotificationWithSlack extends Notification
             ->to('#ghost-talk')
             ->content('Content')
             ->attachment(function ($attachment) {
-                $timestamp = m::mock(Carbon::class);
-                $timestamp->shouldReceive('getTimestamp')->andReturn(1234567890);
                 $attachment->title('Laravel', 'https://laravel.com')
                     ->content('Attachment Content')
                     ->fallback('Attachment Fallback')
@@ -167,7 +186,7 @@ class NotificationDiscordChannelTestNotificationWithSlack extends Notification
                     ->footerIcon('https://laravel.com/fake.png')
                     ->markdown(['text'])
                     ->author('Author', 'https://laravel.com/fake_author', 'https://laravel.com/fake_author.png')
-                    ->timestamp($timestamp);
+                    ->timestamp(Carbon::now());
             });
     }
 }

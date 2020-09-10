@@ -3,7 +3,7 @@
 namespace Awssat\Tests\Notifications;
 
 use Awssat\Notifications\Channels\DiscordWebhookChannel;
-use Awssat\Notifications\Messages\DiscordEmbed;
+use GuzzleHttp\Psr7\Response;
 use Awssat\Notifications\Messages\DiscordMessage;
 use GuzzleHttp\Client;
 use Illuminate\Notifications\Messages\SlackMessage;
@@ -49,6 +49,8 @@ class NotificationDiscordChannelTest extends TestCase
         $this->guzzleHttp->shouldReceive('post')->andReturnUsing(function ($argUrl, $argPayload) use ($payload, $url) {
             $this->assertEquals($argUrl, $url);
             $this->assertEquals($argPayload, $payload);
+            
+            return new Response();
         });
 
         $this->discordChannel->send(new NotificationDiscordChannelTestNotifiable, $notification);

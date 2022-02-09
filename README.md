@@ -36,7 +36,7 @@ you should have a `toDiscord` method
             ->content('Content')
             ->embed(function ($embed) {
                 $embed->title('Discord is cool')->description('Slack nah')
-                    ->field('Laravel', '8.0.0', true)
+                    ->field('Laravel', '9.0.0', true)
                     ->field('PHP', '8.0.0', true);
             });
     }

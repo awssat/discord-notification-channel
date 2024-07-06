@@ -56,15 +56,15 @@ class NotificationDiscordChannelTest extends TestCase
         $this->discordChannel->send(new NotificationDiscordChannelTestNotifiable, $notification);
     }
 
-    public function payloadDataProvider()
+    public  static function payloadDataProvider()
     {
         return [
-            'payloadWithDiscord' => $this->getPayloadWithDiscord(),
-            'payloadWithSlackMessage' => $this->getPayloadWithSlackMessage(),
+            'payloadWithDiscord' => self::getPayloadWithDiscord(),
+            'payloadWithSlackMessage' => self::getPayloadWithSlackMessage(),
         ];
     }
 
-    private function getPayloadWithSlackMessage()
+    private static function getPayloadWithSlackMessage()
     {
         return [
             new NotificationDiscordChannelTestNotificationWithSlack,
@@ -102,7 +102,7 @@ class NotificationDiscordChannelTest extends TestCase
         ];
     }
 
-    private function getPayloadWithDiscord()
+    private static function getPayloadWithDiscord()
     {
         return [
             new NotificationDiscordChannelTestNotificationWithDiscordMessage,

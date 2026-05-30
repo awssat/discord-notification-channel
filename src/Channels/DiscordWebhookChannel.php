@@ -8,6 +8,7 @@ use Awssat\Notifications\Messages\DiscordMessage;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Notifications\Channels\SlackWebhookChannel;
 use Illuminate\Notifications\Messages\SlackMessage;
+use Illuminate\Notifications\Slack\SlackMessage as LaravelSlackMessage;
 use Illuminate\Notifications\Notification;
 
 class DiscordWebhookChannel
@@ -46,7 +47,7 @@ class DiscordWebhookChannel
 
         $message = $notification->toDiscord($notifiable);
 
-        if($message instanceof SlackMessage) {
+        if ($message instanceof SlackMessage || $message instanceof LaravelSlackMessage) {
             $slackWebhook = new SlackWebhookChannel($this->http);
             return $this->http->post($url . '/slack', $slackWebhook->buildJsonPayload($message));
         }

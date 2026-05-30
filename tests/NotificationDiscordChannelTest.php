@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class NotificationDiscordChannelTest extends TestCase
@@ -37,11 +38,7 @@ class NotificationDiscordChannelTest extends TestCase
         m::close();
     }
 
-    /**
-     * @dataProvider payloadDataProvider
-     * @param \Illuminate\Notifications\Notification $notification
-     * @param array $payload
-     */
+    #[DataProvider('payloadDataProvider')]
     public function testCorrectPayloadIsSentToDiscord(Notification $notification, string $url, array $payload)
     {
         $this->guzzleHttp->shouldReceive('post')->andReturnUsing(function ($argUrl, $argPayload) use ($payload, $url) {
